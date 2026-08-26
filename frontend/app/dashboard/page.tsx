@@ -1,17 +1,26 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import Sidebar from "../components/Sidebar";
 import MobileHeader from "../components/MobileHeader";
 import MobileBottomNav from "../components/MobileBottomNav";
 import DashboardView from "../components/DashboardView";
 import CropsView from "../components/CropView";
 import AdvisoryView from "../components/AdvisoryView";
-import HistoryView from "../components/HistoryView";
 import SettingsView from "../components/SettingsView";
 
 export default function DashboardPage() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
   const [activeView, setActiveView] = useState<string>("dashboard-view");
+
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/");
+    }
+  }, [status, router]);
 
   const handleNavigate = useCallback((view: string) => {
     console.log("Navigating to:", view);
@@ -27,14 +36,31 @@ export default function DashboardPage() {
         return <CropsView />;
       case "advisory-view":
         return <AdvisoryView />;
-      case "history-view":
-        return <HistoryView />;
       case "settings-view":
         return <SettingsView />;
       default:
         return <DashboardView />;
     }
   };
+
+  if (status === "loading" || status === "unauthenticated") {
+    return (
+      <div 
+        style={{ 
+          display: "flex", 
+          flexDirection: "column",
+          justifyContent: "center", 
+          alignItems: "center", 
+          minHeight: "100vh", 
+          backgroundColor: "var(--bg-main)",
+          gap: "1rem"
+        }}
+      >
+        <div className="w-12 h-12 border-4 border-green-700 border-t-transparent rounded-full animate-spin" />
+        <p style={{ color: "var(--color-primary-dark)", fontWeight: "600" }}>Securing session...</p>
+      </div>
+    );
+  }
 
   return (
     <>

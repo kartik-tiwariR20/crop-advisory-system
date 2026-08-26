@@ -4,7 +4,6 @@ import {
   RiDashboardLine,
   RiPlantLine,
   RiLightbulbLine,
-  RiHistoryLine,
   RiSettings3Line,
 } from "react-icons/ri";
 
@@ -21,7 +20,6 @@ export default function MobileBottomNav({
     { id: "dashboard-view", label: "Dashboard", icon: RiDashboardLine },
     { id: "crops-view", label: "Crops", icon: RiPlantLine },
     { id: "advisory-view", label: "Advisory", icon: RiLightbulbLine },
-    { id: "history-view", label: "History", icon: RiHistoryLine },
     { id: "settings-view", label: "Profile", icon: RiSettings3Line },
   ];
 

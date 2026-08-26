@@ -1,54 +1,99 @@
 "use client";
 
-import { useState, FormEvent, ChangeEvent } from "react";
-import { FaPaperPlane, FaGlobe, FaChevronDown } from "react-icons/fa";
+import { useState, FormEvent, ChangeEvent, useEffect } from "react";
+import { FaSignInAlt, FaGlobe, FaChevronDown, FaGoogle } from "react-icons/fa";
+import { useSession, signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
-  const [phoneNumber, setPhoneNumber] = useState<string>("+91");
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const handlePhoneChange = (e: ChangeEvent<HTMLInputElement>): void => {
-    let value = e.target.value;
-
-    // Ensure +91 prefix stays
-    if (!value.startsWith("+91")) {
-      value = "+91" + value.replace(/[^0-9]/g, "");
+  useEffect(() => {
+    if (status === "authenticated") {
+      router.push("/dashboard");
     }
+  }, [status, router]);
 
-    // Limit to 13 characters (+91 + 10 digits)
-    if (value.length > 13) {
-      value = value.slice(0, 13);
+  // Fetch user location during login
+  useEffect(() => {
+    if (typeof window !== "undefined" && navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const coords = {
+            lat: position.coords.latitude.toFixed(4),
+            lon: position.coords.longitude.toFixed(4),
+            name: `My Field Coordinates (${position.coords.latitude.toFixed(2)}, ${position.coords.longitude.toFixed(2)})`
+          };
+          localStorage.setItem("userLocation", JSON.stringify(coords));
+          console.log("User location saved on login:", coords);
+        },
+        (error) => {
+          console.warn("Location access denied or failed during login:", error);
+        }
+      );
     }
+  }, []);
 
-    setPhoneNumber(value);
+  const handleEmailChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    setEmail(e.target.value);
+  };
+
+  const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    setPassword(e.target.value);
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
 
-    const trimmedPhone = phoneNumber.trim();
+    const trimmedEmail = email.trim();
+    const trimmedPassword = password.trim();
 
-    if (trimmedPhone && trimmedPhone.length >= 10) {
+    if (trimmedEmail && trimmedPassword) {
       setIsLoading(true);
 
       try {
-        // Simulate OTP sending
-        console.log("Sending OTP to:", trimmedPhone);
+        const result = await signIn("credentials", {
+          email: trimmedEmail,
+          password: trimmedPassword,
+          redirect: false,
+        });
 
-        // Simulate API call delay
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-
-        // Handle success - redirect to dashboard
-        // window.location.href = '/dashboard'
+        if (result?.error) {
+          alert("Invalid email or password. Please try again.");
+        } else {
+          router.push("/dashboard");
+        }
       } catch (error) {
-        console.error("Error sending OTP:", error);
+        console.error("Error logging in:", error);
+        alert("An error occurred during login.");
       } finally {
         setIsLoading(false);
       }
     } else {
-      alert("Please enter a valid phone number");
+      alert("Please enter a valid email and password");
     }
   };
+
+  if (status === "loading" || status === "authenticated") {
+    return (
+      <main
+        className="min-h-screen flex items-center justify-center p-6"
+        style={{
+          background:
+            "linear-gradient(145deg, var(--color-bg-page-start), var(--color-bg-page-end))",
+        }}
+      >
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 border-4 border-green-700 border-t-transparent rounded-full animate-spin" />
+          <p className="font-semibold text-green-800">Loading Fasal Sathi...</p>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main
@@ -95,15 +140,15 @@ export default function LoginPage() {
           </div>
 
           {/* Login Form */}
-          <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-            {/* Phone Input Group */}
+          <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+            {/* Email Input Group */}
             <div className="flex flex-col gap-1.5">
               <label
-                htmlFor="mobileInput"
+                htmlFor="emailInput"
                 className="font-semibold text-[0.95rem] flex items-center gap-2"
                 style={{ color: "var(--color-text-body)" }}
               >
-                Phone number
+                Email Address
               </label>
 
               <div
@@ -128,11 +173,11 @@ export default function LoginPage() {
                 }}
               >
                 <input
-                  type="tel"
-                  id="mobileInput"
-                  value={phoneNumber}
-                  onChange={handlePhoneChange}
-                  placeholder="Enter your mobile number"
+                  type="email"
+                  id="emailInput"
+                  value={email}
+                  onChange={handleEmailChange}
+                  placeholder="Enter your email"
                   required
                   className="w-full border-none py-3.5 pr-1 text-base bg-transparent outline-none font-medium tracking-wide"
                   style={{
@@ -142,7 +187,53 @@ export default function LoginPage() {
               </div>
             </div>
 
-            {/* Send OTP Button */}
+            {/* Password Input Group */}
+            <div className="flex flex-col gap-1.5">
+              <label
+                htmlFor="passwordInput"
+                className="font-semibold text-[0.95rem] flex items-center gap-2"
+                style={{ color: "var(--color-text-body)" }}
+              >
+                Password
+              </label>
+
+              <div
+                className="flex items-center transition-all duration-200"
+                style={{
+                  border: "1.5px solid var(--color-border-input)",
+                  borderRadius: "var(--radius-input)",
+                  padding: "0.2rem 0.2rem 0.2rem 1.5rem",
+                  backgroundColor: "var(--color-input-bg)",
+                }}
+                onFocus={(e) => {
+                  const target = e.currentTarget;
+                  target.style.borderColor = "var(--color-primary-light)";
+                  target.style.boxShadow = "var(--shadow-focus)";
+                  target.style.backgroundColor = "var(--color-input-bg-focus)";
+                }}
+                onBlur={(e) => {
+                  const target = e.currentTarget;
+                  target.style.borderColor = "var(--color-border-input)";
+                  target.style.boxShadow = "none";
+                  target.style.backgroundColor = "var(--color-input-bg)";
+                }}
+              >
+                <input
+                  type="password"
+                  id="passwordInput"
+                  value={password}
+                  onChange={handlePasswordChange}
+                  placeholder="Enter your password"
+                  required
+                  className="w-full border-none py-3.5 pr-1 text-base bg-transparent outline-none font-medium tracking-wide"
+                  style={{
+                    color: "var(--color-text-muted)",
+                  }}
+                />
+              </div>
+            </div>
+
+            {/* Login Button */}
             <button
               type="submit"
               disabled={isLoading}
@@ -154,6 +245,7 @@ export default function LoginPage() {
                 backgroundColor: isLoading
                   ? "var(--color-primary-soft)"
                   : "transparent",
+                cursor: "pointer"
               }}
               onMouseEnter={(e) => {
                 const target = e.currentTarget;
@@ -171,14 +263,47 @@ export default function LoginPage() {
               {isLoading ? (
                 <>
                   <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  <span>Sending...</span>
+                  <span>Logging in...</span>
                 </>
               ) : (
                 <>
-                  <FaPaperPlane className="text-base" />
-                  <span>Send OTP</span>
+                  <FaSignInAlt className="text-base" />
+                  <span>Login</span>
                 </>
               )}
+            </button>
+
+            {/* Divider */}
+            <div className="flex items-center my-0.5">
+              <hr className="flex-grow border-t" style={{ borderColor: "var(--color-border-divider)" }} />
+              <span className="px-3 text-xs font-semibold uppercase tracking-wider" style={{ color: "var(--color-text-muted)" }}>Or</span>
+              <hr className="flex-grow border-t" style={{ borderColor: "var(--color-border-divider)" }} />
+            </div>
+
+            {/* Google Sign-In Button */}
+            <button
+              type="button"
+              onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+              className="flex items-center justify-center gap-3 py-3.5 px-6 rounded-xl font-semibold text-[1rem] tracking-wide transition-all duration-200 hover:scale-[1.02] active:scale-[0.97]"
+              style={{
+                color: "#1f6e32",
+                border: "1.5px solid var(--color-border-input)",
+                borderRadius: "var(--radius-button)",
+                backgroundColor: "#ffffff",
+                boxShadow: "0 2px 4px rgba(0,0,0,0.03)",
+                cursor: "pointer"
+              }}
+              onMouseEnter={(e) => {
+                const target = e.currentTarget;
+                target.style.backgroundColor = "var(--color-primary-soft)";
+              }}
+              onMouseLeave={(e) => {
+                const target = e.currentTarget;
+                target.style.backgroundColor = "#ffffff";
+              }}
+            >
+              <FaGoogle className="text-lg text-green-700" />
+              <span>Sign in with Google</span>
             </button>
 
             {/* Language Selector */}

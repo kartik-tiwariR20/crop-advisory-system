@@ -696,245 +696,403 @@ body {
   }
 }
 
+/* ==================== LOGIN PAGE ==================== */
+main:has(#emailInput) {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: 100svh;
+  background:
+    radial-gradient(
+      circle at 14% 18%,
+      rgba(245, 183, 77, 0.22),
+      transparent 26%
+    ),
+    radial-gradient(
+      circle at 88% 86%,
+      rgba(52, 115, 65, 0.18),
+      transparent 30%
+    ),
+    linear-gradient(135deg, #f8f7ed 0%, #e6f0df 52%, #d8e8d4 100%) !important;
+}
 
+main:has(#emailInput)::before,
+main:has(#emailInput)::after {
+  position: absolute;
+  z-index: -1;
+  content: "";
+  border: 1px solid rgba(47, 92, 47, 0.12);
+  border-radius: 50%;
+  pointer-events: none;
+}
 
+main:has(#emailInput)::before {
+  width: 34rem;
+  height: 34rem;
+  top: -18rem;
+  right: -10rem;
+}
+
+main:has(#emailInput)::after {
+  width: 25rem;
+  height: 25rem;
+  bottom: -14rem;
+  left: -8rem;
+}
+
+main:has(#emailInput) > div {
+  max-width: 29rem;
+}
+
+main:has(#emailInput) > div > div {
+  position: relative;
+  overflow: hidden;
+  padding: 3.25rem 3rem 2.75rem;
+  border: 1px solid rgba(64, 100, 46, 0.18) !important;
+  border-radius: 1.5rem !important;
+  background: rgba(255, 255, 252, 0.9) !important;
+  box-shadow:
+    0 2rem 4rem rgba(43, 73, 38, 0.16),
+    0 0.35rem 1rem rgba(43, 73, 38, 0.06) !important;
+  backdrop-filter: blur(14px) !important;
+}
+
+main:has(#emailInput) > div > div::before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 0.3rem;
+  content: "";
+  background: linear-gradient(90deg, #e4a337, #5c8b46 55%, #2f693b);
+}
+
+main:has(#emailInput) h1 {
+  color: #315d2d !important;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 2.5rem !important;
+  line-height: 1;
+  letter-spacing: 0 !important;
+}
+
+main:has(#emailInput) p {
+  margin-top: 0.75rem !important;
+  padding: 0 !important;
+  color: #71806b !important;
+  background: transparent !important;
+  font-size: 0.82rem !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase;
+}
+
+main:has(#emailInput) form {
+  gap: 1.25rem !important;
+}
+
+main:has(#emailInput) label {
+  color: #344735 !important;
+  font-size: 0.8rem !important;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+main:has(#emailInput) form > div > div {
+  min-height: 3.65rem;
+  padding: 0.2rem 0.85rem 0.2rem 1.15rem !important;
+  border: 1px solid #d7e1d0 !important;
+  border-radius: 0.85rem !important;
+  background: #f7faf4 !important;
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    background 180ms ease;
+}
+
+main:has(#emailInput) input {
+  color: #273a2b !important;
+  font-size: 0.95rem !important;
+  letter-spacing: 0 !important;
+}
+
+main:has(#emailInput) input::placeholder {
+  color: #9aa79a;
+}
+
+main:has(#emailInput) form > div > div:focus-within {
+  border-color: #5d8d4a !important;
+  background: #ffffff !important;
+  box-shadow: 0 0 0 4px rgba(93, 141, 74, 0.13) !important;
+}
+
+main:has(#emailInput) button[type="submit"] {
+  min-height: 3.65rem;
+  margin-top: 0.35rem;
+  border: 0 !important;
+  border-radius: 0.85rem !important;
+  color: #ffffff !important;
+  background: #356b3c !important;
+  box-shadow: 0 0.65rem 1.15rem rgba(53, 107, 60, 0.2);
+}
+
+main:has(#emailInput) button[type="submit"]:hover {
+  background: #285a31 !important;
+  box-shadow: 0 0.85rem 1.4rem rgba(53, 107, 60, 0.28);
+}
+
+main:has(#emailInput) button[type="submit"]:disabled {
+  background: #9bb79b !important;
+}
+
+main:has(#emailInput) form > div:last-child {
+  min-height: 2.9rem;
+  margin-top: 0.15rem !important;
+  border: 1px solid #e2eadc !important;
+  border-radius: 0.85rem !important;
+  color: #5d705b !important;
+  background: rgba(239, 246, 235, 0.75) !important;
+  font-size: 0.78rem !important;
+}
+
+main:has(#emailInput) form > div:last-child span {
+  padding: 0.25rem 0.6rem !important;
+  border-radius: 0.45rem !important;
+  color: #315d2d !important;
+  background: #dfeedd !important;
+  font-size: 0.75rem !important;
+}
+
+@media screen and (max-width: 520px) {
+  main:has(#emailInput) {
+    padding: 1rem;
+  }
+
+  main:has(#emailInput) > div > div {
+    padding: 2.6rem 1.4rem 2rem;
+    border-radius: 1.25rem !important;
+  }
+
+  main:has(#emailInput) h1 {
+    font-size: 2.2rem !important;
+  }
+}
 
 /* ================= 5. CROPS VIEW ================= */
 
 /* Section headings */
 .section-title {
-    font-size: 1.35rem;
-    font-weight: 500;
-    margin-top: 42px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid #d9d9cf;
+  font-size: 1.35rem;
+  font-weight: 500;
+  margin-top: 42px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #d9d9cf;
 }
-
 
 /* ================= RECOMMENDED CROPS ================= */
 
 .recommended-crops {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 20px;
 }
-
 
 /* Individual recommended crop card */
 .crop-card {
-    background-color: #ffffff;
-    border: 1px solid #cfd2c5;
-    border-radius: 11px;
-    padding: 22px;
-    height: 197px;
-    box-sizing: border-box;
+  background-color: #ffffff;
+  border: 1px solid #cfd2c5;
+  border-radius: 11px;
+  padding: 22px;
+  height: 197px;
+  box-sizing: border-box;
 }
-
 
 /* Top part of crop card */
 .top-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    width: 100%;
-    height: auto;
-    padding-bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  height: auto;
+  padding-bottom: 0;
 }
-
 
 /* Crop icon box */
 .crop-icon {
-    width: 42px;
-    height: 42px;
-    border: 1px solid #d0d3c8;
-    border-radius: 7px;
-    background-color: #f7f7f2;
+  width: 42px;
+  height: 42px;
+  border: 1px solid #d0d3c8;
+  border-radius: 7px;
+  background-color: #f7f7f2;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-    color: var(--brand-green);
-    font-size: 1.35rem;
+  color: var(--brand-green);
+  font-size: 1.35rem;
 }
-
 
 /* Weather match badge */
 .weather-badge {
-    display: flex;
-    align-items: center;
-    gap: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 
-    background-color: #dce8ce;
-    color: var(--brand-green);
+  background-color: #dce8ce;
+  color: var(--brand-green);
 
-    border: 1px solid #c4d2b3;
-    border-radius: 999px;
+  border: 1px solid #c4d2b3;
+  border-radius: 999px;
 
-    padding: 3px 10px;
+  padding: 3px 10px;
 
-    font-size: 0.65rem;
-    font-weight: 500;
+  font-size: 0.65rem;
+  font-weight: 500;
 }
-
 
 /* Crop name + description */
 .crop-detail {
-    width: 100%;
-    height: auto;
-    margin-top: 30px;
+  width: 100%;
+  height: auto;
+  margin-top: 30px;
 }
 
 .crop-detail h3 {
-    font-size: 1.05rem;
-    font-weight: 600;
-    margin-bottom: 6px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-bottom: 6px;
 }
 
 .crop-detail p {
-    color: var(--text-muted);
-    font-size: 0.78rem;
-    line-height: 1.4;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  line-height: 1.4;
 }
-
 
 /* ================= CROP ENCYCLOPEDIA ================= */
 
 .encyclopedia-section {
-    margin-top: 42px;
+  margin-top: 42px;
 }
-
 
 /* Search bar */
 .crop-search {
-    width: 594px;
-    height: 52px;
+  width: 594px;
+  height: 52px;
 
-    background-color: #ffffff;
-    border: 1px solid #cfd2c5;
-    border-radius: 8px;
+  background-color: #ffffff;
+  border: 1px solid #cfd2c5;
+  border-radius: 8px;
 
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 
-    padding: 0 14px;
-    box-sizing: border-box;
+  padding: 0 14px;
+  box-sizing: border-box;
 
-    margin-top: 20px;
+  margin-top: 20px;
 }
-
 
 .crop-search > i {
-    font-size: 1.15rem;
-    color: var(--text-muted);
-    margin-right: 12px;
+  font-size: 1.15rem;
+  color: var(--text-muted);
+  margin-right: 12px;
 }
-
 
 /* Search input */
 .crop-search input {
-    flex: 1;
+  flex: 1;
 
-    border: none;
-    outline: none;
+  border: none;
+  outline: none;
 
-    font-size: 0.8rem;
-    color: var(--text-dark);
+  font-size: 0.8rem;
+  color: var(--text-dark);
 
-    background-color: transparent;
+  background-color: transparent;
 }
-
 
 .crop-search input::placeholder {
-    color: #8b9085;
+  color: #8b9085;
 }
-
 
 /* Search microphone */
 .search-mic-btn {
-    background: none;
-    border: none;
+  background: none;
+  border: none;
 
-    color: var(--text-muted);
-    font-size: 1.1rem;
+  color: var(--text-muted);
+  font-size: 1.1rem;
 
-    cursor: pointer;
+  cursor: pointer;
 }
-
 
 /* ================= SMALL CROP CARDS ================= */
 
 .crop-list {
-    display: grid;
+  display: grid;
 
-    grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, 1fr);
 
-    gap: 14px;
+  gap: 14px;
 
-    margin-top: 34px;
+  margin-top: 34px;
 }
-
 
 /* Individual small crop card */
 .small-crop-card {
-    height: 66px;
+  height: 66px;
 
-    background-color: #ffffff;
+  background-color: #ffffff;
 
-    border: 1px solid #cfd2c5;
-    border-radius: 8px;
+  border: 1px solid #cfd2c5;
+  border-radius: 8px;
 
-    padding: 10px 14px;
+  padding: 10px 14px;
 
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 
-    gap: 14px;
+  gap: 14px;
 
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
-
 
 /* Small crop icon */
 .small-crop-icon {
-    width: 36px;
-    height: 36px;
+  width: 36px;
+  height: 36px;
 
-    flex-shrink: 0;
+  flex-shrink: 0;
 
-    border: 1px solid #d0d3c8;
-    border-radius: 5px;
+  border: 1px solid #d0d3c8;
+  border-radius: 5px;
 
-    background-color: #f7f7f2;
+  background-color: #f7f7f2;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-    color: #4d5744;
-    font-size: 1.1rem;
+  color: #4d5744;
+  font-size: 1.1rem;
 }
-
 
 /* Small crop text */
 .small-crop-info {
-    min-width: 0;
+  min-width: 0;
 }
-
 
 .small-crop-info h3 {
-    font-size: 0.85rem;
-    font-weight: 600;
+  font-size: 0.85rem;
+  font-weight: 600;
 
-    margin-bottom: 2px;
+  margin-bottom: 2px;
 }
-
 
 .small-crop-info p {
-    color: var(--text-dark);
+  color: var(--text-dark);
 
-    font-size: 0.68rem;
-    line-height: 1.25;
+  font-size: 0.68rem;
+  line-height: 1.25;
 }
-
