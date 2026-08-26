@@ -1,6 +1,72 @@
-/* style.css – main app styles with animated mobile sidebar */
-@import url("variables.css");
+@import "tailwindcss";
 
+:root {
+  /* Primary brand colors */
+  --color-primary: #1f6e32;
+  --color-primary-dark: #155a27;
+  --color-primary-light: #2b6e3b;
+  --color-primary-soft: #e6f3e6;
+
+  /* Background & surface */
+  --color-bg-page-start: #f0f7f0;
+  --color-bg-page-end: #dae8da;
+  --color-card-bg: #ffffff;
+  --color-input-bg: #f6fbf6;
+  --color-input-bg-focus: #ffffff;
+  --color-lang-bg: #f4faf4;
+  --color-tagline-bg: #edf7ed;
+  --color-badge-bg: #e1f0e1;
+
+  /* Borders */
+  --color-border-input: #d4e8d4;
+  --color-border-card: #3c6700;
+  --color-border-lang: #dceadc;
+  --color-border-divider: #e3efe3;
+
+  /* Text colors */
+  --color-text-green: #3c6700;
+  --color-text-body: #1b1c1a;
+  --color-text-muted: #424939;
+  --color-text-footer: #5e7e62;
+  --color-text-badge: #154d22;
+  --color-text-lang: #1f462a;
+
+  /* Shadows */
+  --shadow-card:
+    0 30px 50px rgba(0, 40, 20, 0.15), 0 10px 20px rgba(0, 0, 0, 0.05);
+  --shadow-button: 0 8px 16px rgba(30, 100, 40, 0.2);
+  --shadow-button-hover: 0 12px 24px rgba(20, 80, 30, 0.25);
+  --shadow-icon: 0 6px 12px rgba(40, 100, 40, 0.1);
+  --shadow-focus: 0 0 0 4px rgba(43, 122, 59, 0.12);
+
+  /* Spacing / sizing */
+  --radius-card: 16px;
+  --radius-input: 12px;
+  --radius-button: 12px;
+  --radius-badge: 12px;
+  --radius-icon: 60px;
+
+  /* Font family */
+  --font-family: "Segoe UI", Roboto, system-ui, -apple-system, sans-serif;
+
+  /* Transitions */
+  --transition-default: 0.2s ease;
+  --transition-sidebar: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* App theme variables */
+  --bg-main: #f3f3eb;
+  --bg-sidebar: #f8f8f2;
+  --bg-card: #ffffff;
+  --text-dark: #222521;
+  --text-muted: #6b7265;
+  --brand-green: #3b5c10;
+  --brand-light: #e7ebd9;
+  --badge-bg: #dbeafe;
+  --badge-text: #1d4ed8;
+  --border-light: #e2e8f0;
+}
+
+/* ==================== GLOBAL STYLES ==================== */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -31,10 +97,6 @@ body {
   margin-bottom: 20px;
 }
 
-.hidden {
-  display: none !important;
-}
-
 /* ==================== MOBILE HEADER ==================== */
 .mobile-header {
   display: none;
@@ -45,56 +107,17 @@ body {
   border-bottom: 1px solid var(--border-light);
   padding: 12px 16px;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .mobile-header .brand h2 {
   font-size: 1.1rem;
   color: var(--brand-green);
+  text-align: center;
 }
 
-.hamburger-btn {
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  color: var(--brand-green);
-  cursor: pointer;
-  padding: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 8px;
-  transition: background-color 0.2s ease;
-}
-
-.hamburger-btn:hover {
-  background-color: var(--brand-light);
-}
-
-.header-spacer {
-  width: 40px;
-}
-
-/* ==================== SIDEBAR OVERLAY ==================== */
-.sidebar-overlay {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 200;
-  opacity: 0;
-  transition: opacity var(--transition-sidebar);
-}
-
-.sidebar-overlay.active {
-  opacity: 1;
-}
-
-/* ==================== SIDEBAR LAYOUT & NAVIGATION ==================== */
+/* ==================== SIDEBAR (Desktop Only) ==================== */
 .sidebar {
   width: 256px;
   background-color: var(--bg-sidebar);
@@ -107,39 +130,6 @@ body {
   left: 0;
   height: 100vh;
   z-index: 300;
-  transition:
-    transform var(--transition-sidebar),
-    box-shadow var(--transition-sidebar);
-}
-
-.sidebar-close-btn {
-  display: none;
-  align-items: center;
-  justify-content: flex-end;
-  padding-bottom: 16px;
-  margin-bottom: 8px;
-  border-bottom: 1px solid var(--border-light);
-}
-
-.sidebar-close-btn button {
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  color: var(--text-muted);
-  cursor: pointer;
-  padding: 4px 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition:
-    color 0.2s ease,
-    background-color 0.2s ease;
-  border-radius: 8px;
-}
-
-.sidebar-close-btn button:hover {
-  color: var(--text-dark);
-  background-color: rgba(0, 0, 0, 0.05);
 }
 
 .brand h2 {
@@ -223,7 +213,6 @@ body {
   padding: 40px;
   max-width: 1024px;
   margin-left: 256px;
-  transition: margin-left var(--transition-sidebar);
 }
 
 .header h1,
@@ -269,8 +258,6 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  text-align: right;
-  line-height: 1.1;
 }
 
 .recommendation-text {
@@ -469,9 +456,10 @@ body {
   margin-bottom: 6px;
 }
 
-.history-card.active .query-answer-inner {
-  white-space: normal;
-  overflow: visible;
+.query-answer {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  line-height: 1.5;
 }
 
 .history-card-meta {
@@ -492,10 +480,6 @@ body {
   font-size: 1.25rem;
   color: #4a4e46;
   transition: transform 0.3s ease;
-}
-
-.history-card.active .chevron-icon {
-  transform: rotate(180deg);
 }
 
 /* ==================== SETTINGS VIEW COMPONENTS ==================== */
@@ -572,27 +556,6 @@ body {
   cursor: pointer;
 }
 
-.btn-primary {
-  background-color: var(--brand-green);
-  color: #ffffff;
-  font-size: 0.75rem;
-  font-weight: 500;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: opacity 0.2s ease;
-}
-
-.btn-primary:hover {
-  opacity: 0.9;
-}
-
-.actions-row {
-  display: flex;
-  gap: 12px;
-}
-
 .btn {
   padding: 10px 20px;
   border-radius: 8px;
@@ -622,6 +585,11 @@ body {
 
 .btn-secondary:hover {
   background-color: #f3f3e9;
+}
+
+.actions-row {
+  display: flex;
+  gap: 12px;
 }
 
 /* ==================== MOBILE BOTTOM NAVIGATION ==================== */
@@ -656,7 +624,7 @@ body {
   transition: color 0.2s ease;
 }
 
-.mobile-nav-btn i {
+.mobile-nav-btn svg {
   font-size: 1.25rem;
 }
 
@@ -665,40 +633,16 @@ body {
   font-weight: 600;
 }
 
-/* ==================== MOBILE & TABLET RESPONSIVENESS ==================== */
+/* ==================== RESPONSIVE STYLES ==================== */
 @media screen and (max-width: 768px) {
-  /* Show mobile header */
   .mobile-header {
     display: flex;
   }
 
-  /* Show close button in sidebar */
-  .sidebar-close-btn {
-    display: flex;
-  }
-
-  /* Hide sidebar by default on mobile */
   .sidebar {
-    transform: translateX(-100%);
+    display: none;
   }
 
-  /* Show sidebar when open */
-  .sidebar.open {
-    transform: translateX(0);
-    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15);
-  }
-
-  /* Show overlay on mobile */
-  .sidebar-overlay {
-    display: block;
-    pointer-events: none;
-  }
-
-  .sidebar-overlay.active {
-    pointer-events: auto;
-  }
-
-  /* Remove left margin from main content on mobile */
   .main-content {
     margin-left: 0;
     width: 100%;
@@ -706,13 +650,11 @@ body {
     max-width: 100%;
   }
 
-  /* Stack metrics vertically on mobile */
   .metrics-grid {
     grid-template-columns: 1fr;
     gap: 12px;
   }
 
-  /* Stack settings items vertically */
   .info-item,
   .setting-item {
     flex-direction: column;
@@ -733,26 +675,20 @@ body {
     width: 100%;
   }
 
-  /* Show bottom navigation on mobile */
   .mobile-bottom-nav {
     display: flex;
   }
 }
 
-/* Desktop styles */
 @media screen and (min-width: 769px) {
   .mobile-header,
-  .sidebar-overlay,
   .mobile-bottom-nav {
     display: none;
   }
 
   .sidebar {
+    display: flex;
     transform: translateX(0);
-  }
-
-  .sidebar-close-btn {
-    display: none;
   }
 
   .main-content {
@@ -760,245 +696,403 @@ body {
   }
 }
 
+/* ==================== LOGIN PAGE ==================== */
+main:has(#emailInput) {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: 100svh;
+  background:
+    radial-gradient(
+      circle at 14% 18%,
+      rgba(245, 183, 77, 0.22),
+      transparent 26%
+    ),
+    radial-gradient(
+      circle at 88% 86%,
+      rgba(52, 115, 65, 0.18),
+      transparent 30%
+    ),
+    linear-gradient(135deg, #f8f7ed 0%, #e6f0df 52%, #d8e8d4 100%) !important;
+}
 
+main:has(#emailInput)::before,
+main:has(#emailInput)::after {
+  position: absolute;
+  z-index: -1;
+  content: "";
+  border: 1px solid rgba(47, 92, 47, 0.12);
+  border-radius: 50%;
+  pointer-events: none;
+}
 
+main:has(#emailInput)::before {
+  width: 34rem;
+  height: 34rem;
+  top: -18rem;
+  right: -10rem;
+}
+
+main:has(#emailInput)::after {
+  width: 25rem;
+  height: 25rem;
+  bottom: -14rem;
+  left: -8rem;
+}
+
+main:has(#emailInput) > div {
+  max-width: 29rem;
+}
+
+main:has(#emailInput) > div > div {
+  position: relative;
+  overflow: hidden;
+  padding: 3.25rem 3rem 2.75rem;
+  border: 1px solid rgba(64, 100, 46, 0.18) !important;
+  border-radius: 1.5rem !important;
+  background: rgba(255, 255, 252, 0.9) !important;
+  box-shadow:
+    0 2rem 4rem rgba(43, 73, 38, 0.16),
+    0 0.35rem 1rem rgba(43, 73, 38, 0.06) !important;
+  backdrop-filter: blur(14px) !important;
+}
+
+main:has(#emailInput) > div > div::before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 0.3rem;
+  content: "";
+  background: linear-gradient(90deg, #e4a337, #5c8b46 55%, #2f693b);
+}
+
+main:has(#emailInput) h1 {
+  color: #315d2d !important;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 2.5rem !important;
+  line-height: 1;
+  letter-spacing: 0 !important;
+}
+
+main:has(#emailInput) p {
+  margin-top: 0.75rem !important;
+  padding: 0 !important;
+  color: #71806b !important;
+  background: transparent !important;
+  font-size: 0.82rem !important;
+  letter-spacing: 0.08em !important;
+  text-transform: uppercase;
+}
+
+main:has(#emailInput) form {
+  gap: 1.25rem !important;
+}
+
+main:has(#emailInput) label {
+  color: #344735 !important;
+  font-size: 0.8rem !important;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+main:has(#emailInput) form > div > div {
+  min-height: 3.65rem;
+  padding: 0.2rem 0.85rem 0.2rem 1.15rem !important;
+  border: 1px solid #d7e1d0 !important;
+  border-radius: 0.85rem !important;
+  background: #f7faf4 !important;
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    background 180ms ease;
+}
+
+main:has(#emailInput) input {
+  color: #273a2b !important;
+  font-size: 0.95rem !important;
+  letter-spacing: 0 !important;
+}
+
+main:has(#emailInput) input::placeholder {
+  color: #9aa79a;
+}
+
+main:has(#emailInput) form > div > div:focus-within {
+  border-color: #5d8d4a !important;
+  background: #ffffff !important;
+  box-shadow: 0 0 0 4px rgba(93, 141, 74, 0.13) !important;
+}
+
+main:has(#emailInput) button[type="submit"] {
+  min-height: 3.65rem;
+  margin-top: 0.35rem;
+  border: 0 !important;
+  border-radius: 0.85rem !important;
+  color: #ffffff !important;
+  background: #356b3c !important;
+  box-shadow: 0 0.65rem 1.15rem rgba(53, 107, 60, 0.2);
+}
+
+main:has(#emailInput) button[type="submit"]:hover {
+  background: #285a31 !important;
+  box-shadow: 0 0.85rem 1.4rem rgba(53, 107, 60, 0.28);
+}
+
+main:has(#emailInput) button[type="submit"]:disabled {
+  background: #9bb79b !important;
+}
+
+main:has(#emailInput) form > div:last-child {
+  min-height: 2.9rem;
+  margin-top: 0.15rem !important;
+  border: 1px solid #e2eadc !important;
+  border-radius: 0.85rem !important;
+  color: #5d705b !important;
+  background: rgba(239, 246, 235, 0.75) !important;
+  font-size: 0.78rem !important;
+}
+
+main:has(#emailInput) form > div:last-child span {
+  padding: 0.25rem 0.6rem !important;
+  border-radius: 0.45rem !important;
+  color: #315d2d !important;
+  background: #dfeedd !important;
+  font-size: 0.75rem !important;
+}
+
+@media screen and (max-width: 520px) {
+  main:has(#emailInput) {
+    padding: 1rem;
+  }
+
+  main:has(#emailInput) > div > div {
+    padding: 2.6rem 1.4rem 2rem;
+    border-radius: 1.25rem !important;
+  }
+
+  main:has(#emailInput) h1 {
+    font-size: 2.2rem !important;
+  }
+}
 
 /* ================= 5. CROPS VIEW ================= */
 
 /* Section headings */
 .section-title {
-    font-size: 1.35rem;
-    font-weight: 500;
-    margin-top: 42px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid #d9d9cf;
+  font-size: 1.35rem;
+  font-weight: 500;
+  margin-top: 42px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #d9d9cf;
 }
-
 
 /* ================= RECOMMENDED CROPS ================= */
 
 .recommended-crops {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 20px;
 }
-
 
 /* Individual recommended crop card */
 .crop-card {
-    background-color: #ffffff;
-    border: 1px solid #cfd2c5;
-    border-radius: 11px;
-    padding: 22px;
-    height: 197px;
-    box-sizing: border-box;
+  background-color: #ffffff;
+  border: 1px solid #cfd2c5;
+  border-radius: 11px;
+  padding: 22px;
+  height: 197px;
+  box-sizing: border-box;
 }
-
 
 /* Top part of crop card */
 .top-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    width: 100%;
-    height: auto;
-    padding-bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  height: auto;
+  padding-bottom: 0;
 }
-
 
 /* Crop icon box */
 .crop-icon {
-    width: 42px;
-    height: 42px;
-    border: 1px solid #d0d3c8;
-    border-radius: 7px;
-    background-color: #f7f7f2;
+  width: 42px;
+  height: 42px;
+  border: 1px solid #d0d3c8;
+  border-radius: 7px;
+  background-color: #f7f7f2;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-    color: var(--brand-green);
-    font-size: 1.35rem;
+  color: var(--brand-green);
+  font-size: 1.35rem;
 }
-
 
 /* Weather match badge */
 .weather-badge {
-    display: flex;
-    align-items: center;
-    gap: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 
-    background-color: #dce8ce;
-    color: var(--brand-green);
+  background-color: #dce8ce;
+  color: var(--brand-green);
 
-    border: 1px solid #c4d2b3;
-    border-radius: 999px;
+  border: 1px solid #c4d2b3;
+  border-radius: 999px;
 
-    padding: 3px 10px;
+  padding: 3px 10px;
 
-    font-size: 0.65rem;
-    font-weight: 500;
+  font-size: 0.65rem;
+  font-weight: 500;
 }
-
 
 /* Crop name + description */
 .crop-detail {
-    width: 100%;
-    height: auto;
-    margin-top: 30px;
+  width: 100%;
+  height: auto;
+  margin-top: 30px;
 }
 
 .crop-detail h3 {
-    font-size: 1.05rem;
-    font-weight: 600;
-    margin-bottom: 6px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-bottom: 6px;
 }
 
 .crop-detail p {
-    color: var(--text-muted);
-    font-size: 0.78rem;
-    line-height: 1.4;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  line-height: 1.4;
 }
-
 
 /* ================= CROP ENCYCLOPEDIA ================= */
 
 .encyclopedia-section {
-    margin-top: 42px;
+  margin-top: 42px;
 }
-
 
 /* Search bar */
 .crop-search {
-    width: 594px;
-    height: 52px;
+  width: 594px;
+  height: 52px;
 
-    background-color: #ffffff;
-    border: 1px solid #cfd2c5;
-    border-radius: 8px;
+  background-color: #ffffff;
+  border: 1px solid #cfd2c5;
+  border-radius: 8px;
 
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 
-    padding: 0 14px;
-    box-sizing: border-box;
+  padding: 0 14px;
+  box-sizing: border-box;
 
-    margin-top: 20px;
+  margin-top: 20px;
 }
-
 
 .crop-search > i {
-    font-size: 1.15rem;
-    color: var(--text-muted);
-    margin-right: 12px;
+  font-size: 1.15rem;
+  color: var(--text-muted);
+  margin-right: 12px;
 }
-
 
 /* Search input */
 .crop-search input {
-    flex: 1;
+  flex: 1;
 
-    border: none;
-    outline: none;
+  border: none;
+  outline: none;
 
-    font-size: 0.8rem;
-    color: var(--text-dark);
+  font-size: 0.8rem;
+  color: var(--text-dark);
 
-    background-color: transparent;
+  background-color: transparent;
 }
-
 
 .crop-search input::placeholder {
-    color: #8b9085;
+  color: #8b9085;
 }
-
 
 /* Search microphone */
 .search-mic-btn {
-    background: none;
-    border: none;
+  background: none;
+  border: none;
 
-    color: var(--text-muted);
-    font-size: 1.1rem;
+  color: var(--text-muted);
+  font-size: 1.1rem;
 
-    cursor: pointer;
+  cursor: pointer;
 }
-
 
 /* ================= SMALL CROP CARDS ================= */
 
 .crop-list {
-    display: grid;
+  display: grid;
 
-    grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, 1fr);
 
-    gap: 14px;
+  gap: 14px;
 
-    margin-top: 34px;
+  margin-top: 34px;
 }
-
 
 /* Individual small crop card */
 .small-crop-card {
-    height: 66px;
+  height: 66px;
 
-    background-color: #ffffff;
+  background-color: #ffffff;
 
-    border: 1px solid #cfd2c5;
-    border-radius: 8px;
+  border: 1px solid #cfd2c5;
+  border-radius: 8px;
 
-    padding: 10px 14px;
+  padding: 10px 14px;
 
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 
-    gap: 14px;
+  gap: 14px;
 
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
-
 
 /* Small crop icon */
 .small-crop-icon {
-    width: 36px;
-    height: 36px;
+  width: 36px;
+  height: 36px;
 
-    flex-shrink: 0;
+  flex-shrink: 0;
 
-    border: 1px solid #d0d3c8;
-    border-radius: 5px;
+  border: 1px solid #d0d3c8;
+  border-radius: 5px;
 
-    background-color: #f7f7f2;
+  background-color: #f7f7f2;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-    color: #4d5744;
-    font-size: 1.1rem;
+  color: #4d5744;
+  font-size: 1.1rem;
 }
-
 
 /* Small crop text */
 .small-crop-info {
-    min-width: 0;
+  min-width: 0;
 }
-
 
 .small-crop-info h3 {
-    font-size: 0.85rem;
-    font-weight: 600;
+  font-size: 0.85rem;
+  font-weight: 600;
 
-    margin-bottom: 2px;
+  margin-bottom: 2px;
 }
-
 
 .small-crop-info p {
-    color: var(--text-dark);
+  color: var(--text-dark);
 
-    font-size: 0.68rem;
-    line-height: 1.25;
+  font-size: 0.68rem;
+  line-height: 1.25;
 }
-

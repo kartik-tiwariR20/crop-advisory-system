@@ -14,11 +14,31 @@ backend/db.sqlite3
 # Node / Frontend
 # =========================
 
-frontend/node_modules/
-frontend/.env
-frontend/.env.local
-frontend/dist/
-frontend/build/
+# Frontend Next.js project rules moved here from frontend/.gitignore
+vanilla-frontend
+frontend/node_modules
+frontend/.pnp
+frontend/.pnp.*
+frontend/.yarn/*
+frontend/!.yarn/patches
+frontend/!.yarn/plugins
+frontend/!.yarn/releases
+frontend/!.yarn/versions
+
+frontend/coverage
+frontend/.next/
+frontend/out/
+frontend/build
+frontend/.DS_Store
+frontend/*.pem
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/.pnpm-debug.log*
+frontend/.env*
+frontend/.vercel
+frontend/*.tsbuildinfo
+frontend/next-env.d.ts
 
 # =========================
 # IDE
