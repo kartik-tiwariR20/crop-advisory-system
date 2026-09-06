@@ -71,7 +71,7 @@ export default function LoginPage() {
     setIsLoading(true);
     try {
       if (mode === "register") {
-        const res = await fetch("/api/register", {
+        const res = await fetch("/register", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
