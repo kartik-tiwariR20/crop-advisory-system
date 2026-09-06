@@ -65,7 +65,7 @@ export default function RecommendView() {
   useEffect(() => {
     async function loadOptions() {
       try {
-        const res = await fetch("/api/recommend/options");
+        const res = await fetch("/recommend/options");
         const data = await res.json();
         if (data.fertilizer_options) setOptions(data.fertilizer_options);
       } catch (err) {
@@ -125,7 +125,7 @@ export default function RecommendView() {
 
     setCropLoading(true);
     try {
-      const res = await fetch("/api/recommend/crop", {
+      const res = await fetch("/recommend/crop", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(cropForm),
@@ -155,7 +155,7 @@ export default function RecommendView() {
 
     setFertLoading(true);
     try {
-      const res = await fetch("/api/recommend/fertilizer", {
+      const res = await fetch("/recommend/fertilizer", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(fertForm),
