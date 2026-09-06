@@ -166,8 +166,8 @@ else:
                 }
             else:
                 raise ValueError(f"Invalid DATABASE_URL format: {DATABASE_URL}")
-    else:
-        # Fallback to individual environment variables
+    elif os.getenv('DB_HOST') and os.getenv('DB_PASSWORD'):
+        # Individual Postgres environment variables were explicitly provided
         DATABASES = {
             'default': {
                 'ENGINE': 'django.db.backends.postgresql',
@@ -182,6 +182,20 @@ else:
                 }
             }
         }
+    elif IS_LOCAL:
+        # Zero-config local development fallback: no DATABASE_URL and no
+        # DB_* vars were provided, so use the bundled SQLite file instead of
+        # requiring a local Postgres server.
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': BASE_DIR / 'db.sqlite3',
+            }
+        }
+    else:
+        raise ValueError(
+            "No database configured. Set DATABASE_URL or DB_HOST/DB_USER/DB_PASSWORD."
+        )
 
 # =============================================================================
 # PASSWORD VALIDATION
