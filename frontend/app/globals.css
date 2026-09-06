@@ -396,6 +396,160 @@ body {
   transition: color 0.2s ease;
 }
 
+/* ==================== RECOMMENDATION VIEW COMPONENTS ==================== */
+.recommend-tabs {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.recommend-tab-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.recommend-tab-btn.active {
+  color: var(--color-primary-dark);
+  border-bottom-color: var(--color-primary);
+}
+
+.recommend-weather-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--color-border-input, var(--border-light));
+  background-color: #f9f9f6;
+  color: var(--color-primary-dark);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.recommend-weather-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.recommend-form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.recommend-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.recommend-field label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.recommend-field input,
+.recommend-field select {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border-light);
+  background-color: #f9f9f6;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+.recommend-field input:focus,
+.recommend-field select:focus {
+  border-color: var(--brand-green);
+  background-color: #ffffff;
+}
+
+.recommend-submit-btn {
+  grid-column: 1 / -1;
+  margin-top: 8px;
+  padding: 13px;
+  background-color: var(--color-primary-dark);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.recommend-submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.recommend-alert {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+}
+
+.recommend-alert.danger {
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+}
+
+.recommend-result {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 10px;
+  background-color: var(--color-primary-soft);
+  border: 1px solid var(--color-primary-light);
+}
+
+.recommend-result-icon {
+  font-size: 1.8rem;
+  color: var(--color-primary-dark);
+  margin-top: 2px;
+}
+
+.recommend-result-label {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.recommend-result-value {
+  margin: 4px 0;
+  font-size: 1.4rem;
+  color: var(--color-primary-dark);
+}
+
+.recommend-result-confidence {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
 /* ==================== HISTORY VIEW COMPONENTS ==================== */
 .history-header {
   margin-bottom: 24px;

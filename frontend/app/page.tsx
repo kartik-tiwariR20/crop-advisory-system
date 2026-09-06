@@ -8,9 +8,13 @@ import { useRouter } from "next/navigation";
 export default function LoginPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const [mode, setMode] = useState<"login" | "register">("login");
+  const [name, setName] = useState<string>("");
+  const [location, setLocation] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [formError, setFormError] = useState<string | null>(null);
 
   useEffect(() => {
     if (status === "authenticated") {
@@ -48,33 +52,58 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
+    setFormError(null);
 
     const trimmedEmail = email.trim();
     const trimmedPassword = password.trim();
+    const trimmedName = name.trim();
 
-    if (trimmedEmail && trimmedPassword) {
-      setIsLoading(true);
+    if (!trimmedEmail || !trimmedPassword) {
+      setFormError("Please enter a valid email and password");
+      return;
+    }
 
-      try {
-        const result = await signIn("credentials", {
-          email: trimmedEmail,
-          password: trimmedPassword,
-          redirect: false,
+    if (mode === "register" && !trimmedName) {
+      setFormError("Please enter your name");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      if (mode === "register") {
+        const res = await fetch("/api/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: trimmedName,
+            email: trimmedEmail,
+            password: trimmedPassword,
+            location: location.trim() || "Not specified",
+          }),
         });
-
-        if (result?.error) {
-          alert("Invalid email or password. Please try again.");
-        } else {
-          router.push("/dashboard");
+        const data = await res.json();
+        if (!res.ok) {
+          setFormError(data.error || "Registration failed. Please try again.");
+          return;
         }
-      } catch (error) {
-        console.error("Error logging in:", error);
-        alert("An error occurred during login.");
-      } finally {
-        setIsLoading(false);
       }
-    } else {
-      alert("Please enter a valid email and password");
+
+      const result = await signIn("credentials", {
+        email: trimmedEmail,
+        password: trimmedPassword,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        setFormError("Invalid email or password. Please try again.");
+      } else {
+        router.push("/dashboard");
+      }
+    } catch (error) {
+      console.error(`Error during ${mode}:`, error);
+      setFormError(`An error occurred while trying to ${mode}. Please try again.`);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -141,6 +170,84 @@ export default function LoginPage() {
 
           {/* Login Form */}
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+            {formError && (
+              <div
+                style={{
+                  padding: "10px 14px",
+                  borderRadius: "10px",
+                  backgroundColor: "#fef2f2",
+                  border: "1px solid #fecaca",
+                  color: "#b91c1c",
+                  fontSize: "0.85rem",
+                }}
+              >
+                {formError}
+              </div>
+            )}
+
+            {mode === "register" && (
+              <>
+                <div className="flex flex-col gap-1.5">
+                  <label
+                    htmlFor="nameInput"
+                    className="font-semibold text-[0.95rem]"
+                    style={{ color: "var(--color-text-body)" }}
+                  >
+                    Full Name
+                  </label>
+                  <div
+                    className="flex items-center"
+                    style={{
+                      border: "1.5px solid var(--color-border-input)",
+                      borderRadius: "var(--radius-input)",
+                      padding: "0.2rem 0.2rem 0.2rem 1.5rem",
+                      backgroundColor: "var(--color-input-bg)",
+                    }}
+                  >
+                    <input
+                      type="text"
+                      id="nameInput"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="Enter your full name"
+                      required={mode === "register"}
+                      className="w-full border-none py-3.5 pr-1 text-base bg-transparent outline-none font-medium tracking-wide"
+                      style={{ color: "var(--color-text-muted)" }}
+                    />
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-1.5">
+                  <label
+                    htmlFor="locationInput"
+                    className="font-semibold text-[0.95rem]"
+                    style={{ color: "var(--color-text-body)" }}
+                  >
+                    Farm Location (optional)
+                  </label>
+                  <div
+                    className="flex items-center"
+                    style={{
+                      border: "1.5px solid var(--color-border-input)",
+                      borderRadius: "var(--radius-input)",
+                      padding: "0.2rem 0.2rem 0.2rem 1.5rem",
+                      backgroundColor: "var(--color-input-bg)",
+                    }}
+                  >
+                    <input
+                      type="text"
+                      id="locationInput"
+                      value={location}
+                      onChange={(e) => setLocation(e.target.value)}
+                      placeholder="e.g. Palampur, Kangra District"
+                      className="w-full border-none py-3.5 pr-1 text-base bg-transparent outline-none font-medium tracking-wide"
+                      style={{ color: "var(--color-text-muted)" }}
+                    />
+                  </div>
+                </div>
+              </>
+            )}
+
             {/* Email Input Group */}
             <div className="flex flex-col gap-1.5">
               <label
@@ -263,14 +370,29 @@ export default function LoginPage() {
               {isLoading ? (
                 <>
                   <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  <span>Logging in...</span>
+                  <span>{mode === "register" ? "Creating account..." : "Logging in..."}</span>
                 </>
               ) : (
                 <>
                   <FaSignInAlt className="text-base" />
-                  <span>Login</span>
+                  <span>{mode === "register" ? "Create Account" : "Login"}</span>
                 </>
               )}
+            </button>
+
+            {/* Mode toggle */}
+            <button
+              type="button"
+              onClick={() => {
+                setFormError(null);
+                setMode(mode === "login" ? "register" : "login");
+              }}
+              className="text-sm font-semibold"
+              style={{ color: "var(--color-primary-dark)", background: "none", border: "none", cursor: "pointer" }}
+            >
+              {mode === "login"
+                ? "New farmer? Create an account"
+                : "Already have an account? Login"}
             </button>
 
             {/* Divider */}
