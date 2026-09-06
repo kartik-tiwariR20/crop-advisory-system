@@ -9,6 +9,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
 from django.views.decorators.csrf import csrf_exempt
 from .models import Farmer
+from . import ml_models
 
 
 def serialize_user(user):
@@ -370,3 +371,144 @@ def get_crop_data(request):
             {'error': f'Failed to fetch crop data: {str(e)}'}, 
             status=status.HTTP_400_BAD_REQUEST
         )
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def ml_options_view(request):
+    """
+    Metadata endpoint the frontend uses to build the recommendation forms:
+    valid dropdown values for the fertilizer model + the label list the
+    crop model can predict.
+    """
+    try:
+        crop_pipeline = ml_models.get_crop_pipeline()
+        crop_labels = sorted(str(c) for c in crop_pipeline.label_encoder.classes_)
+    except Exception:
+        crop_labels = []
+
+    return Response({
+        'crop_features': ml_models.CROP_FEATURE_ORDER,
+        'fertilizer_features': ml_models.FERTILIZER_FEATURE_COLUMNS,
+        'fertilizer_options': ml_models.FERTILIZER_OPTIONS,
+        'possible_crops': crop_labels,
+    }, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def predict_crop_view(request):
+    """
+    Recommend the best crop for the given soil & weather readings.
+    Body: { N, P, K, temperature, humidity, ph, rainfall }
+    """
+    data = request.data
+    required = ml_models.CROP_FEATURE_ORDER
+    missing = [f for f in required if data.get(f) in (None, '')]
+    if missing:
+        return Response(
+            {'error': f"Missing required field(s): {', '.join(missing)}"},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    try:
+        values = {f: float(data[f]) for f in required}
+    except (TypeError, ValueError):
+        return Response(
+            {'error': 'All fields must be numeric.'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    try:
+        crop, confidence = ml_models.predict_crop(**{
+            'n': values['N'], 'p': values['P'], 'k': values['K'],
+            'temperature': values['temperature'], 'humidity': values['humidity'],
+            'ph': values['ph'], 'rainfall': values['rainfall'],
+        })
+    except Exception as e:
+        return Response(
+            {'error': f'Prediction failed: {str(e)}'},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+    # Best-effort: persist the recommendation as an Advisory entry for the
+    # logged-in farmer so it shows up in their history.
+    if request.user and request.user.is_authenticated:
+        try:
+            farmer, _ = get_or_create_farmer(request.user)
+            crop_entry = farmer.crops.filter(crop_name__iexact=crop).first()
+            if crop_entry:
+                from .models import Advisory
+                Advisory.objects.create(
+                    crop_data=crop_entry,
+                    advisory_text=f"ML crop recommendation: {crop} (confidence {confidence:.2%})",
+                    temperature_celsius=values['temperature'],
+                    humidity_percent=values['humidity'],
+                )
+        except Exception:
+            pass  # Recommendation still returns even if history logging fails
+
+    return Response({
+        'recommended_crop': crop,
+        'confidence': round(confidence, 4),
+        'inputs': values,
+    }, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def predict_fertilizer_view(request):
+    """
+    Recommend the best fertilizer for the given soil, crop & weather readings.
+    Body: { Soil_Type, Soil_pH, Soil_Moisture, Organic_Carbon, Nitrogen_Level,
+            Phosphorus_Level, Potassium_Level, Temperature, Humidity, Rainfall,
+            Crop_Type, Crop_Growth_Stage, Season, Irrigation_Type }
+    """
+    data = request.data
+    required = ml_models.FERTILIZER_FEATURE_COLUMNS
+    missing = [f for f in required if data.get(f) in (None, '')]
+    if missing:
+        return Response(
+            {'error': f"Missing required field(s): {', '.join(missing)}"},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    numeric_fields = [
+        'Soil_pH', 'Soil_Moisture', 'Organic_Carbon', 'Nitrogen_Level',
+        'Phosphorus_Level', 'Potassium_Level', 'Temperature', 'Humidity', 'Rainfall',
+    ]
+    categorical_fields = ['Soil_Type', 'Crop_Type', 'Crop_Growth_Stage', 'Season', 'Irrigation_Type']
+
+    for field in categorical_fields:
+        valid = ml_models.FERTILIZER_OPTIONS.get(field, [])
+        if valid and data.get(field) not in valid:
+            return Response(
+                {'error': f"'{field}' must be one of: {', '.join(valid)}"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+    payload = {}
+    try:
+        for field in numeric_fields:
+            payload[field] = float(data[field])
+        for field in categorical_fields:
+            payload[field] = data[field]
+    except (TypeError, ValueError):
+        return Response(
+            {'error': 'Numeric fields must contain numbers.'},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    try:
+        fertilizer, confidence = ml_models.predict_fertilizer(**payload)
+    except Exception as e:
+        return Response(
+            {'error': f'Prediction failed: {str(e)}'},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+    return Response({
+        'recommended_fertilizer': fertilizer,
+        'confidence': round(confidence, 4),
+        'inputs': payload,
+    }, status=status.HTTP_200_OK)
