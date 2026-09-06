@@ -5,6 +5,7 @@ import {
   RiPlantLine,
   RiLightbulbLine,
   RiSettings3Line,
+  RiFlaskLine,
 } from "react-icons/ri";
 
 import { useSession } from "next-auth/react";
@@ -28,6 +29,7 @@ export default function Sidebar({ activeView, onNavigate }: SidebarProps) {
   const navItems = [
     { id: "dashboard-view", label: "Dashboard", icon: RiDashboardLine },
     { id: "crops-view", label: "Crops", icon: RiPlantLine },
+    { id: "recommend-view", label: "Recommend", icon: RiFlaskLine },
     { id: "advisory-view", label: "Advisory", icon: RiLightbulbLine },
     { id: "settings-view", label: "Settings", icon: RiSettings3Line },
   ];
