@@ -48,28 +48,7 @@ const handler = NextAuth({
             }
           }
         } catch (error) {
-          console.warn("Backend authentication failed or is offline. Falling back to local/mock authentication.", error);
-        }
-
-        // Development fallback: Allow local login if backend is offline or credentials match
-        // Let's accept any email with length > 3 and password length > 3 for demonstration
-        if (credentials.email.includes("@") && credentials.password.length >= 4) {
-          // Extract name from email
-          const name = credentials.email.split("@")[0];
-          return {
-            id: "mock-user-id-123",
-            name: name.charAt(0).toUpperCase() + name.slice(1),
-            email: credentials.email,
-            image: null,
-            isMock: true,
-            farmer: {
-              id: 999,
-              name: name.charAt(0).toUpperCase() + name.slice(1),
-              email: credentials.email,
-              location: "Palampur, Kangra District",
-              created_at: new Date().toISOString(),
-            }
-          };
+          console.warn("Backend authentication failed or is offline.", error);
         }
 
         return null;
@@ -93,7 +72,7 @@ const handler = NextAuth({
   pages: {
     signIn: "/",
   },
-  secret: process.env.NEXTAUTH_SECRET || "super-secret-development-key-123456789",
+  secret: process.env.NEXTAUTH_SECRET,
 });
 
 export { handler as GET, handler as POST };
