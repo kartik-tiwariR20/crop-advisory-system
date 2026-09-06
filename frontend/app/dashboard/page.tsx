@@ -10,6 +10,7 @@ import DashboardView from "../components/DashboardView";
 import CropsView from "../components/CropView";
 import AdvisoryView from "../components/AdvisoryView";
 import SettingsView from "../components/SettingsView";
+import RecommendView from "../components/RecommendView";
 
 export default function DashboardPage() {
   const { data: session, status } = useSession();
@@ -36,6 +37,8 @@ export default function DashboardPage() {
         return <CropsView />;
       case "advisory-view":
         return <AdvisoryView />;
+      case "recommend-view":
+        return <RecommendView />;
       case "settings-view":
         return <SettingsView />;
       default:
