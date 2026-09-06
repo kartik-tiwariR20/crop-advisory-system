@@ -237,7 +237,9 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # =============================================================================
 # CORS
 # =============================================================================
-CORS_ALLOW_ALL_ORIGINS = True  # Only for development!
+CORS_ALLOWED_ORIGINS = [
+       "https://your-frontend-domain.com",
+]
 
 # =============================================================================
 # DEFAULT PRIMARY KEY FIELD
