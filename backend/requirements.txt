@@ -13,3 +13,4 @@ numpy==2.4.4
 pandas==3.0.2
 scikit-learn==1.6.1
 tensorflow-cpu==2.21.0
+gunicorn==23.0.0
