@@ -238,7 +238,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # CORS
 # =============================================================================
 CORS_ALLOWED_ORIGINS = [
-       "https://your-frontend-domain.com",
+       "https://crop-advisory-system-fvzr.vercel.app",
 ]
 
 # =============================================================================
